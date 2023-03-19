@@ -58,12 +58,11 @@ export function getHeightForNthSeqInIcon(
         m.close()
       }
       const onError = (error: any) => {
-        console.log(error)
+        reject(error)
       }
       const m = getMonitor<EventNotification>(ICON_URL, spec, onEvent, onError)
     } catch (e) {
-      console.log(e)
-      reject()
+      reject(e)
     }
   })
 }
