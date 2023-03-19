@@ -1,0 +1,71 @@
+{
+  "base_dir": "bmr",
+  "log_level": "debug",
+  "console_level": "trace",
+  "log_writer": {
+    "filename": "bmr/bmr.log"
+  },
+  "stat_collector": {
+    "verbose": false
+  },
+  "log_forwarder": {
+    "vendor": "slack",
+    "level": "info"
+  },
+  "relays": [
+    {
+      "name": "s2i",
+      "src": {
+        "address": "btp://0x228.snow/0xf808Fbb55CFDDa37D051B962b7918a8D3981feD5",
+        "endpoint": ["wss://snow-archive.icenetwork.io"],
+        "options": {
+          "verifier": {
+            "blockHeight": 807612,
+            "parentHash": "0x6dca498ae63f6f1927c5f27ce533e7e86108f8c67a5c816184ae58495f7cacd0"
+          },
+          "syncConcurrency": 300
+        },
+        "offset": 224136
+      },
+      "dst": {
+        "address": "btp://0x1.icon/cx23a91ee3dd290486a9113a6a42429825d813de53",
+        "endpoint": ["https://ctz.solidwallet.io/api/v3/icon_dex"],
+        "options": {
+          "step_limit": 2500000000,
+          "tx_data_size_limit": 8192,
+          "balance_threshold": "200000000000000000000"
+        },
+        "aws_secret_name": "iconbridge/snow-icon/key_secret",
+        "aws_region": "ap-northeast-1"
+      }
+    },
+    {
+      "name": "i2s",
+      "src": {
+        "address": "btp://0x1.icon/cx23a91ee3dd290486a9113a6a42429825d813de53",
+        "endpoint": ["https://ctz.solidwallet.io/api/v3/icon_dex"],
+        "offset": 57168853,
+        "options": {
+          "verifier": {
+            "blockHeight": 60874151,
+            "validatorsHash": "0x7d0ca134256c4a0ac13023d8c44169d1d27180fd694c8f6b22b0322217912447"
+          },
+          "syncConcurrency": 300
+        }
+      },
+      "dst": {
+        "address": "btp://0x228.snow/0xf808Fbb55CFDDa37D051B962b7918a8D3981feD5",
+        "endpoint": ["wss://snow-archive.icenetwork.io"],
+        "options": {
+          "gas_limit": 24000000,
+          "tx_data_size_limit": 8192,
+          "balance_threshold": "200000000000000000000",
+          "boost_gas_price": 1.0
+        },
+        "tx_data_size_limit": 8192,
+        "aws_secret_name": "iconbridge/icon-snow/key_secret",
+        "aws_region": "ap-northeast-1"
+      }
+    }
+  ]
+}

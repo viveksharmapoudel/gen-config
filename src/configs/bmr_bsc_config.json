@@ -1,0 +1,83 @@
+{
+    "base_dir": "bmr",
+    "log_level": "debug",
+    "console_level": "trace",
+    "log_writer": {
+      "filename": "bmr/bmr.log"
+    },
+    "stat_collector": {
+      "verbose": false
+    },
+    "log_forwarder": {
+      "vendor": "slack",
+      "address": "---",
+      "level": "info"
+    },
+    "relays": [
+      {
+        "name": "b2i",
+        "src": {
+          "address": "btp://0x38.bsc/0x034AaDE86BF402F023Aa17E5725fABC4ab9E9798",
+          "endpoint": [
+              "http://13.214.92.64:20491",
+          "https://nd-419-093-864.p2pify.com/44b5281754159dc5b3152908d9765014"
+      ],
+          "options": {
+            "verifier": {
+              "blockHeight": 25996990,
+              "parentHash": "0x95c70dabf5e89ee68676a303b8cc2b63c21574faea659bf0af682cf7bd061be8",
+          "validatorData": "0xd883010113846765746888676f312e31392e35856c696e75780000005b7663b50bac492386862ad3df4b666bc096b0505bb694da2465176c461afb316ebc773c61faee85a6515daa295e26495cef6f69dfa69911d9d8e4f3bbadb89b2d4c407bbe49438ed859fe965b140dcf1aab71a93f349bbafec1551819b8be1efea2fc46ca749aa161dd481a114a2e761c554b641742c973867899d3685b1ded8013785d6623cc18d214320b6bb6475972b61c6014342d914470ec7ac2975be345796c2b7ae2f5b9e386cd1b50a4550696d957cb4900f03a8b6c8fd93d6f4cea42bbb345dbc6f0dfdb5bec739f8ccdafcc39f3c7d6ebf637c9151673cbc36b88a6f79b60359f141df90a0c745125b131caaffd12b218c5d6af1f979ac42bc68d98a5a0d796c6ab01b4dd66d7c2c7e57f628210187192fb89d4b99dd4be807dddb074639cd9fa61b47676c064fc50d62ccc8e6d00c17eb431350c6c50d8b8f05176b90b11d1d6bf74282782b0b3eb1413c901d6ecf02e8e28e2d3a739effcd3a99387d015e260eefac72ebea1e9ae3261a475a27bb1028f140bc2a7c843318afdea0a6e3c511bbd10f4519ece37dc24887e11b55dee226379db83cffc681495730c11fdde79ba4c0c4e720b6fb9710642cfb24c0d311a5a85ee5ec4acdb8afe8a23534f0ad0f0ac780819140e2161c42922158c36421e3e057df5faa4f1a39cc4eae3a00967fcc44a01"
+        },
+            "syncConcurrency": 50
+          },
+          "offset": 20493051
+        },
+        "dst": {
+          "address": "btp://0x1.icon/cx23a91ee3dd290486a9113a6a42429825d813de53",
+          "endpoint": [
+            "https://ctz.solidwallet.io/api/v3/icon_dex"
+          ],
+          "options": {
+            "step_limit": 13610920010,
+            "tx_data_size_limit": 8192,
+            "balance_threshold": 200000000000000000000
+          },
+          "aws_secret_name": "iconbridge/icon/key_secret",
+          "aws_region": "ap-northeast-1"
+        }
+      },
+      {
+        "name": "i2b",
+        "src": {
+          "address": "btp://0x1.icon/cx23a91ee3dd290486a9113a6a42429825d813de53",
+          "endpoint": [
+            "https://ctz.solidwallet.io/api/v3/icon_dex"
+          ],
+          "offset": 54062001,
+          "options": {
+            "verifier": {
+              "blockHeight": 62421261,
+              "validatorsHash": "0x2aa481a5270eb35ae6011e2cd7563dd313cac9a5040a8025ddd21a78e60d7164"
+            },
+            "syncConcurrency": 150
+          }
+        },
+        "dst": {
+          "address": "btp://0x38.bsc/0x034AaDE86BF402F023Aa17E5725fABC4ab9E9798",
+          "endpoint": [
+           "http://13.214.92.64:20491",
+       "https://nd-419-093-864.p2pify.com/44b5281754159dc5b3152908d9765014"
+      ],
+          "options": {
+            "gas_limit": 24000000,
+            "tx_data_size_limit": 8192,
+            "balance_threshold": 1000000000000000000,
+            "boost_gas_price": 1.0
+          },
+          "tx_data_size_limit": 8192,
+          "aws_secret_name": "iconbridge/bsc/key_secret",
+          "aws_region": "ap-northeast-1"
+        }
+      }
+    ]
+  }

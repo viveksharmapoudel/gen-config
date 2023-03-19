@@ -1,0 +1,71 @@
+{
+  "base_dir": "bmr",
+  "log_level": "debug",
+  "console_level": "trace",
+  "log_writer": { "filename": "bmr/bmr.log" },
+  "stat_collector": { "verbose": false },
+  "log_forwarder": { "vendor": "slack", "address": "---", "level": "info" },
+  "relays": [
+    {
+      "name": "b2i",
+      "src": {
+        "address": "btp://0x38.bsc/0x034AaDE86BF402F023Aa17E5725fABC4ab9E9798",
+        "endpoint": [
+          "http://13.214.92.64:20491",
+          "https://nd-419-093-864.p2pify.com/44b5281754159dc5b3152908d9765014"
+        ],
+        "options": {
+          "verifier": {
+            "blockHeight": 26590990,
+            "parentHash": "0x9dac8ac7d4861d779a86533bfd3f3222c467362c6c3ff6ab96dee108e76d2c9d",
+            "validatorData": "0xd883010114846765746888676f312e32302e31856c696e75780000005b7663b50bac492386862ad3df4b666bc096b0505bb694da295e26495cef6f69dfa69911d9d8e4f3bbadb89b3f349bbafec1551819b8be1efea2fc46ca749aa161dd481a114a2e761c554b641742c973867899d3685b1ded8013785d6623cc18d214320b6bb6475970f657164e5b75689b64b7fd1fa275f334f28e1872b61c6014342d914470ec7ac2975be345796c2b7ae2f5b9e386cd1b50a4550696d957cb4900f03a8b6c8fd93d6f4cea42bbb345dbc6f0dfdb5bec739bb832254baf4e8b4cc26bd2b52b31389b56e98b9f8ccdafcc39f3c7d6ebf637c9151673cbc36b88a6f79b60359f141df90a0c745125b131caaffd12b218c5d6af1f979ac42bc68d98a5a0d796c6ab01b4dd66d7c2c7e57f628210187192fb89d4b99dd4be807dddb074639cd9fa61b47676c064fc50d62ccc8e6d00c17eb431350c6c50d8b8f05176b90b11d1d6bf74282782b0b3eb1413c901d6ecf02e8e28e9ae3261a475a27bb1028f140bc2a7c843318afdea0a6e3c511bbd10f4519ece37dc24887e11b55dee226379db83cffc681495730c11fdde79ba4c0cef0274e31810c9df02f98fafde0f841f4e66a1cda1da4cd6fbffbce01db456cc7005e27a668089efa10b83661cba11ecdaaa5f1d3303d3351a472446efc34ebcfc50cb1ef1e2210e045dc2a3308c108cfdfeee7d01"
+          },
+          "syncConcurrency": 50
+        },
+        "offset": 26590990
+      },
+      "dst": {
+        "address": "btp://0x1.icon/cx23a91ee3dd290486a9113a6a42429825d813de53",
+        "endpoint": ["https://ctz.solidwallet.io/api/v3/icon_dex"],
+        "options": {
+          "step_limit": 13610920010,
+          "tx_data_size_limit": 8192,
+          "balance_threshold": 200000000000000000000
+        },
+        "aws_secret_name": "iconbridge/icon/key_secret",
+        "aws_region": "ap-northeast-1"
+      }
+    },
+    {
+      "name": "i2b",
+      "src": {
+        "address": "btp://0x1.icon/cx23a91ee3dd290486a9113a6a42429825d813de53",
+        "endpoint": ["https://ctz.solidwallet.io/api/v3/icon_dex"],
+        "offset": 54062001,
+        "options": {
+          "verifier": {
+            "blockHeight": 63320545,
+            "validatorsHash": "0x2a84c25bdf3e328512691ed9f34a1d4e5a481da5a732cafb46504aaf2899907a"
+          },
+          "syncConcurrency": 150
+        }
+      },
+      "dst": {
+        "address": "btp://0x38.bsc/0x034AaDE86BF402F023Aa17E5725fABC4ab9E9798",
+        "endpoint": [
+          "http://13.214.92.64:20491",
+          "https://nd-419-093-864.p2pify.com/44b5281754159dc5b3152908d9765014"
+        ],
+        "options": {
+          "gas_limit": 24000000,
+          "tx_data_size_limit": 8192,
+          "balance_threshold": 1000000000000000000,
+          "boost_gas_price": 1
+        },
+        "tx_data_size_limit": 8192,
+        "aws_secret_name": "iconbridge/bsc/key_secret",
+        "aws_region": "ap-northeast-1"
+      }
+    }
+  ]
+}
