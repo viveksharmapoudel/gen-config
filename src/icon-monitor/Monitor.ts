@@ -25,7 +25,7 @@ export default class Monitor<T> {
       if (this.state === State.CONNECT) {
         const res = JSON.parse(event?.toString())
         if (res.code != 0) {
-          throw new Error(event.data.message).toString()
+          throw new Error(event).toString()
         } else {
           this.state = State.START
         }

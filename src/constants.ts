@@ -25,8 +25,4 @@ export enum CHAIN_NAMES {
 
 export const BSC_EPOCH = 200
 
-// export const CHAIN_NAMES={
-//     bsc:"bsc",
-//     snow:"snow",
-//     icon:"icon"
-// }
+export const MESSAGE_SIGNATURE = 'Message(str,int,bytes)'

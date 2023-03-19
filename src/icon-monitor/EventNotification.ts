@@ -4,15 +4,12 @@ export default class EventNotification {
   readonly hash: string
   readonly height: BigNumber
   readonly index: BigNumber
-  readonly events: BigNumber[]
+  readonly events: any
 
   constructor(data) {
     this.hash = data.hash
     this.height = BigNumber.from(data.height)
     this.index = BigNumber.from(data.index)
-    if (data.events) {
-      this.events = []
-      for (let i = 0; i < data.events; i++) this.events[i] = BigNumber.from(data.events[i])
-    }
+    this.events = data.events
   }
 }

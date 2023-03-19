@@ -25,9 +25,6 @@ async function createNewConfig(chainName: CHAIN_NAMES) {
   try {
     console.log('******** Create New Config  *************')
 
-    const status = await getHeightForNthSeqInIcon(10, 5000)
-    return
-
     let { solVerifier, iconVerifier } = await getVerifierParameters(chainName)
 
     if (chainName == CHAIN_NAMES.bsc) {
@@ -59,6 +56,7 @@ async function getVerifierParameters(chainName: CHAIN_NAMES): Promise<{
       iconStatus.txSeq,
       solStatus.rxHeight,
       iconStatus.currentHeight,
+      chainName,
     )
 
     const solVerifier = await getSolidityVerifier(
@@ -83,6 +81,7 @@ async function getIconVerifier(
   icon_tx_seq: BigNumber,
   sol_rx_height: BigNumber,
   icon_latest_height: BigNumber,
+  dstChainName: CHAIN_NAMES,
 ): Promise<IVerifierIcon> {
   console.log('************ getIconVerifier **************')
   try {
@@ -91,7 +90,7 @@ async function getIconVerifier(
       throw Error('rx_seq cannot be greater than tx_seq')
     }
     if (sol_rx_seq < icon_tx_seq) {
-      const h = await getHeightForNthSeqInIcon(sol_rx_seq.toNumber() + 1, sol_rx_height.toNumber())
+      const h = await getHeightForNthSeqInIcon(sol_rx_seq.toNumber() + 1, sol_rx_height.toNumber(), dstChainName)
       height = h - 1
     }
 
