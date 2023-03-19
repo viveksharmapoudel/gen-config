@@ -91,6 +91,7 @@ export async function getValidatorHashByHeightIcon(height: number): Promise<stri
     if (!header[6]) {
       throw new Error('ValidatorHash is not present')
     }
+
     return header[6]
   } catch (e) {
     console.log('error', e)
