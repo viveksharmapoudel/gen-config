@@ -1,4 +1,4 @@
-export const ICON_URL = 'https://ctz.solidwallet.io/api/v3'
+export const ICON_URL = 'https://ctz.solidwallet.io/api/v3/icon_dex'
 // export const ICON_URL = 'http://localhost:9082/api/v3'
 export const BSC_URL = 'https://nd-419-093-864.p2pify.com/44b5281754159dc5b3152908d9765014'
 export const SNOW_URL = 'https://snow-archive.icenetwork.io:9933'

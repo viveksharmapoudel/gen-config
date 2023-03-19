@@ -1,5 +1,5 @@
 import { CHAIN_NAMES } from './constants.js'
-import updateConfig from './updateConfig.js'
+import createNewConfig from './updateConfig.js'
 
 async function __main__() {
   const whichConfig = process.argv[2]
@@ -7,7 +7,7 @@ async function __main__() {
     console.log('Select either bsc or snow chain ')
     return
   }
-  updateConfig(whichConfig)
+  createNewConfig(whichConfig)
 }
 
 __main__()

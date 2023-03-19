@@ -3,7 +3,6 @@ import {
   getHeightForNthSeqSolidity,
   getParentHashByheightSolidity,
   getValidatorsDataByHashSolidity,
-  getLastBlockNumber,
 } from './helper/solidity_helper.js'
 import { getHeightForNthSeqInIcon, getValidatorHashByHeightIcon, getStatusIcon } from './helper/icon_helper.js'
 import {
@@ -22,21 +21,21 @@ import bscConfig from '../src/configs/bmr_bsc_config.json' assert { type: 'json'
 import snowConfig from '../src/configs/bmr_snow_config.json' assert { type: 'json' }
 import { writeToFile } from './helper/utils.js'
 
-async function updateConfig(chainName: CHAIN_NAMES) {
+async function createNewConfig(chainName: CHAIN_NAMES) {
   try {
-    console.log('******** Update Config *************')
+    console.log('******** Create New Config  *************')
 
-    // const status = await getValidatorHashByHeightIcon(5000)
-    // return
+    const status = await getHeightForNthSeqInIcon(10, 5000)
+    return
 
     let { solVerifier, iconVerifier } = await getVerifierParameters(chainName)
 
     if (chainName == CHAIN_NAMES.bsc) {
-      updateBSCConfig(solVerifier, iconVerifier)
+      newBSCConfig(solVerifier, iconVerifier)
       return
     }
 
-    udpateSNOWConfig(solVerifier, iconVerifier)
+    newSNOWConfig(solVerifier, iconVerifier)
   } catch (e) {
     console.log(e)
   }
@@ -146,7 +145,7 @@ async function getSolidityVerifier(
   }
 }
 
-async function updateBSCConfig(bscVerifier: IVerifierSolidity, iconVerifier: IVerifierIcon) {
+async function newBSCConfig(bscVerifier: IVerifierSolidity, iconVerifier: IVerifierIcon) {
   try {
     console.log('********* Creating New BSC Config **********')
     console.log({ bscVerifier, iconVerifier })
@@ -168,7 +167,7 @@ async function updateBSCConfig(bscVerifier: IVerifierSolidity, iconVerifier: IVe
   }
 }
 
-async function udpateSNOWConfig(snowVerifier: IVerifierSolidity, iconVerifier: IVerifierIcon) {
+async function newSNOWConfig(snowVerifier: IVerifierSolidity, iconVerifier: IVerifierIcon) {
   try {
     console.log('********* Creating New Snow Config **********')
     console.log({ snowVerifier, iconVerifier })
@@ -189,4 +188,4 @@ async function udpateSNOWConfig(snowVerifier: IVerifierSolidity, iconVerifier: I
   }
 }
 
-export default updateConfig
+export default createNewConfig

@@ -6,6 +6,10 @@ import { ICON_CHAIN_BMC_CONTRACT, ICON_URL } from '../constants.js'
 import { IIconGetStatus } from '../interfaces/IIcon.js'
 import { IStatus } from '../interfaces/ISolidity.js'
 import { base64, RLP } from 'ethers/lib/utils.js'
+import MonitorSpec from '../icon-monitor/MonitorSpec.js'
+import Monitor from '../icon-monitor/Monitor.js'
+import BlockMonitorSpec from '../icon-monitor/BlockMonitorSpec.js'
+import BlockNotification from '../icon-monitor/BlockNotification.js'
 
 const IconServiceDefault = IconService.default
 const { HttpProvider, IconBuilder } = IconServiceDefault
@@ -36,9 +40,28 @@ export const getStatusIcon = async (_link: string): Promise<IStatus> => {
   }
 }
 
+export function getMonitor<T>(
+  url: string,
+  request: MonitorSpec,
+  ondata: (data: T) => void,
+  onerror: (error) => void,
+): Monitor<T> {
+  url = url.replace('http', 'ws')
+  return new Monitor<T>(url, request, ondata, onerror)
+}
+
 export async function getHeightForNthSeqInIcon(seq_number: number, height_to_start: number): Promise<number> {
   // await iconService
   // seq_number => x + 1
+  const lastBlockHeight = await (await iconService.getLastBlock().execute()).height
+  const spec = new BlockMonitorSpec(BigNumber.from(lastBlockHeight))
+  const onEvent = (data: BlockNotification) => {
+    console.log('data:', data)
+  }
+  const onError = (error: any) => {
+    console.log(error)
+  }
+  const m = getMonitor<BlockNotification>(ICON_URL, spec, onEvent, onError)
 
   // TODO:
   return 0
