@@ -3,6 +3,7 @@ import {
   getHeightForNthSeqSolidity,
   getParentHashByheightSolidity,
   getValidatorsDataByHashSolidity,
+  getTransactionResult,
 } from './helper/solidity_helper.js'
 import { getHeightForNthSeqInIcon, getValidatorHashByHeightIcon, getStatusIcon } from './helper/icon_helper.js'
 import {
@@ -89,9 +90,12 @@ async function getIconVerifier(
     if (sol_rx_seq > icon_tx_seq) {
       throw Error('rx_seq cannot be greater than tx_seq')
     }
+
     if (sol_rx_seq < icon_tx_seq) {
-      const h = await getHeightForNthSeqInIcon(sol_rx_seq.toNumber() + 1, sol_rx_height.toNumber(), dstChainName)
-      height = h - 1
+      // fetching height for next sequence data
+      const h = await getHeightForNthSeqInIcon(sol_rx_seq.add(1), sol_rx_height, dstChainName)
+      // setting parameter one block behind
+      height = h.toNumber() - 1
     }
 
     // fetching height h gives next_validator_hash so validator_hash should be h-1
@@ -121,11 +125,12 @@ async function getSolidityVerifier(
     }
     if (icon_rx_seq.lt(sol_tx_seq)) {
       const h = await getHeightForNthSeqSolidity(chainName, icon_rx_seq.toNumber() + 1, icon_rx_height.toNumber())
+      // setting height 1 height behind height
       height = h - 1
     }
 
     // should get parentHash for h-1
-    const parentHash = await getParentHashByheightSolidity(chainName, height - 1)
+    const parentHash = await getParentHashByheightSolidity(chainName, height)
 
     if (chainName === CHAIN_NAMES.bsc) {
       const validatorData = await getValidatorsDataByHashSolidity(chainName, height)

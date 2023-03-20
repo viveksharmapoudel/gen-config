@@ -41,10 +41,10 @@ export const getStatusIcon = async (_link: string): Promise<IStatus> => {
 }
 
 export function getHeightForNthSeqInIcon(
-  seq_number: number,
-  height_to_start: number,
+  seq_number: BigNumber,
+  height_to_start: BigNumber,
   dstChainName: CHAIN_NAMES,
-): Promise<number> {
+): Promise<BigNumber> {
   return new Promise((resolve, reject) => {
     try {
       const dstLinkAddr = dstChainName === CHAIN_NAMES.bsc ? BSC_LINK : SNOW_LINK
@@ -54,10 +54,10 @@ export function getHeightForNthSeqInIcon(
       )
       const onEvent = async (data: EventNotification) => {
         const op = await getSequenceNumberFromEventNotification(data)
-        if (op.toNumber() === seq_number) {
+        if (op.eq(seq_number)) {
           m.close()
           // because of monitor block subtract 1 from height
-          resolve(data.height.toNumber() - 1)
+          resolve(data.height.sub(1))
         }
       }
       const onError = (error: any) => {
