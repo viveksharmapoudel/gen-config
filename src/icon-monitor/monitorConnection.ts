@@ -4,7 +4,7 @@ import MonitorSpec from './MonitorSpec.js'
 export function getMonitor<T>(
   url: string,
   request: MonitorSpec,
-  ondata: (data: T) => void,
+  ondata: (data: T) => Promise<void>,
   onerror: (error) => void,
 ): Monitor<T> {
   url = url.replace('http', 'ws')

@@ -1,4 +1,4 @@
-import { Contract, ethers } from 'ethers'
+import { BigNumber, Contract, ethers } from 'ethers'
 import {
   BSC_CHAIN_BMC_CONTRACT,
   BSC_EPOCH,
@@ -52,6 +52,20 @@ export async function getLastBlockNumber(chainName: CHAIN_NAMES): Promise<number
   }
 }
 
+export async function getTransactionResult(
+  chainName: CHAIN_NAMES,
+  hash: string,
+): Promise<ethers.providers.TransactionReceipt> {
+  try {
+    const provider = getProviderSolidity(chainName)
+    const op = await provider.getTransactionReceipt(hash)
+    console.log(op.logs)
+    return op
+  } catch (e) {
+    console.log(e)
+  }
+}
+
 export async function getStatusSolidity(chainName: CHAIN_NAMES, link: string): Promise<IStatus> {
   try {
     const contractInstance = getContractSolidity(chainName)
@@ -68,7 +82,11 @@ export async function getStatusSolidity(chainName: CHAIN_NAMES, link: string): P
   }
 }
 
-export async function getHeightForNthSeqSolidity(chainName, seq_number, height_to_start): Promise<number> {
+export async function getHeightForNthSeqSolidity(
+  chainName: CHAIN_NAMES,
+  seq_number: number,
+  height_to_start: number,
+): Promise<number> {
   try {
     const provider = getProviderSolidity(chainName)
     const contractInstance = getContractSolidity(chainName)
@@ -78,8 +96,12 @@ export async function getHeightForNthSeqSolidity(chainName, seq_number, height_t
       const _startBlock = i
       const _endBlock = Math.min(currentBlockNumber, i + 4999)
       const events = await contractInstance.queryFilter('Message', _startBlock, _endBlock)
-      if (events && events.length > 0) {
-        return events[0].blockNumber
+      for (i = 0; i < events.length; i++) {
+        const event = events[i]
+        const seq1 = event.args['_seq']
+        if (seq1.number() === seq_number) {
+          return event.blockNumber
+        }
       }
     }
     return currentBlockNumber

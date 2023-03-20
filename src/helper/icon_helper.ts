@@ -3,7 +3,7 @@ import { BigNumber as IconBigNumber } from 'bignumber.js'
 
 import IconService from 'icon-sdk-js'
 import { BSC_LINK, CHAIN_NAMES, ICON_CHAIN_BMC_CONTRACT, ICON_URL, MESSAGE_SIGNATURE, SNOW_LINK } from '../constants.js'
-import { IIconGetStatus } from '../interfaces/IIcon.js'
+import { IIconEventLog, IIconGetStatus } from '../interfaces/IIcon.js'
 import { IStatus } from '../interfaces/ISolidity.js'
 import { base64, RLP } from 'ethers/lib/utils.js'
 import EventMonitorSpec from '../icon-monitor/EventMonitorSpec.js'
@@ -52,10 +52,13 @@ export function getHeightForNthSeqInIcon(
         BigNumber.from(height_to_start),
         new EventFilter(MESSAGE_SIGNATURE, ICON_CHAIN_BMC_CONTRACT, [dstLinkAddr], []),
       )
-      const onEvent = (data: EventNotification) => {
-        const height = data.height.toNumber()
-        resolve(height)
-        m.close()
+      const onEvent = async (data: EventNotification) => {
+        const op = await getSequenceNumberFromEventNotification(data)
+        if (op.toNumber() === seq_number) {
+          m.close()
+          // because of monitor block subtract 1 from height
+          resolve(data.height.toNumber() - 1)
+        }
       }
       const onError = (error: any) => {
         reject(error)
@@ -65,6 +68,28 @@ export function getHeightForNthSeqInIcon(
       reject(e)
     }
   })
+}
+
+async function getSequenceNumberFromEventNotification(data: EventNotification): Promise<BigNumber> {
+  try {
+    const h = IconServiceDefault.IconConverter.toBigNumber(data.height.toNumber())
+
+    // because of monitor block subtract 1 from height
+    const block = await iconService.getBlockByHeight(h.minus(1)).execute()
+
+    // get the txHash which  is corresponding to event Notification
+    const confirmTx = block.confirmedTransactionList[data.index.toNumber()]
+
+    const txresult = await iconService.getTransactionResult(confirmTx.txHash).execute()
+    console.log({ hash: txresult.txHash })
+
+    const eventLog = txresult.eventLogs[BigNumber.from(data.events[0]).toNumber()] as IIconEventLog
+
+    const seqNumber = eventLog.indexed[2]
+    return BigNumber.from(seqNumber)
+  } catch (e) {
+    console.log(e)
+  }
 }
 
 export async function getValidatorHashByHeightIcon(height: number): Promise<string> {

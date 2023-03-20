@@ -13,7 +13,7 @@ export default class Monitor<T> {
   private spec: MonitorSpec
   private state = State.INIT
 
-  constructor(url: string, spec: MonitorSpec, ondata: (data: T) => void, onerror: (error) => void) {
+  constructor(url: string, spec: MonitorSpec, ondata: (data: T) => Promise<void>, onerror: (error) => void) {
     this.url = url
     this.spec = spec
     this.ws = new WebSocket(`${this.url}/${this.spec.getPath()}`)
@@ -21,7 +21,7 @@ export default class Monitor<T> {
       this.ws.send(JSON.stringify(this.spec.getParam()))
       this.state = State.CONNECT
     })
-    this.ws.on('message', event => {
+    this.ws.on('message', async event => {
       if (this.state === State.CONNECT) {
         const res = JSON.parse(event?.toString())
         if (res.code != 0) {
@@ -32,7 +32,7 @@ export default class Monitor<T> {
       } else if (this.state === State.START) {
         const converter = spec.getConverter()
         const data: T = converter(JSON.parse(event?.toString()))
-        ondata(data)
+        await ondata(data)
       }
     })
     this.ws.on('close', event => {

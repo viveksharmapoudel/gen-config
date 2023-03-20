@@ -9,3 +9,9 @@ export interface IIconGetStatus {
   rx_height: string
   cur_height: string
 }
+
+export interface IIconEventLog {
+  address: string
+  indexed: string[]
+  data: string[]
+}
