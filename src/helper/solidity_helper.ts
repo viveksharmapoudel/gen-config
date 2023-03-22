@@ -23,7 +23,7 @@ function getProviderSolidity(chainName: CHAIN_NAMES): ethers.providers.JsonRpcPr
     }
     return new ethers.providers.JsonRpcProvider(url)
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
 }
 
@@ -38,7 +38,7 @@ function getContractSolidity(chainName: CHAIN_NAMES): Contract {
     let provider = getProviderSolidity(chainName)
     return new ethers.Contract(contractAddress, bmcPeripheryABI, provider)
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
 }
 
@@ -48,7 +48,7 @@ export async function getLastBlockNumber(chainName: CHAIN_NAMES): Promise<number
     const op = await provider.getBlockNumber()
     return op
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
 }
 
@@ -59,10 +59,9 @@ export async function getTransactionResult(
   try {
     const provider = getProviderSolidity(chainName)
     const op = await provider.getTransactionReceipt(hash)
-    console.log(op.logs)
     return op
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
 }
 
@@ -77,7 +76,7 @@ export async function getStatusSolidity(chainName: CHAIN_NAMES, link: string): P
       currentHeight: op.currentHeight,
     }
   } catch (e) {
-    console.log(e)
+    console.error(e)
     return
   }
 }
@@ -92,21 +91,25 @@ export async function getHeightForNthSeqSolidity(
     const contractInstance = getContractSolidity(chainName)
 
     const currentBlockNumber = await provider.getBlockNumber()
-    for (let i = height_to_start; i < currentBlockNumber; i += 5000) {
-      const _startBlock = i
-      const _endBlock = Math.min(currentBlockNumber, i + 4999)
+    console.log({ height_to_start })
+    for (let _startBlock = height_to_start; _startBlock < currentBlockNumber; _startBlock += 5000) {
+      let _endBlock = Math.min(currentBlockNumber, _startBlock + 4999)
+      console.log({ _startBlock, _endBlock })
       const events = await contractInstance.queryFilter('Message', _startBlock, _endBlock)
-      for (i = 0; i < events.length; i++) {
-        const event = events[i]
-        const seq1 = event.args['_seq']
-        if (seq1.number() === seq_number) {
+      console.log({ events })
+      for (let j = 0; j < events.length; j++) {
+        const event = events[j]
+        const seq1 = event.args['_seq'] as BigNumber
+        console.log('Event Block Number:', event.blockNumber)
+        console.log('Event seq:', seq1.toNumber())
+        if (seq1.toNumber() === seq_number) {
           return event.blockNumber
         }
       }
     }
     return currentBlockNumber
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
 }
 
@@ -116,7 +119,7 @@ export async function getParentHashByheightSolidity(chainName: CHAIN_NAMES, heig
     const op = await provider.getBlock(height)
     return op.parentHash
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
 }
 
@@ -129,6 +132,6 @@ export async function getValidatorsDataByHashSolidity(chainName: CHAIN_NAMES, he
     const op = await provider.getBlock(height)
     return op.extraData
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
 }

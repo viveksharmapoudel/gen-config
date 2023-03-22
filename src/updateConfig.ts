@@ -21,6 +21,7 @@ import { IVerifierIcon } from './interfaces/IIcon.js'
 import bscConfig from '../src/configs/bmr_bsc_config.json' assert { type: 'json' }
 import snowConfig from '../src/configs/bmr_snow_config.json' assert { type: 'json' }
 import { writeToFile } from './helper/utils.js'
+import { mockStatusBSC, mockStatusICON } from './mocks/getStatus.js'
 
 async function createNewConfig(chainName: CHAIN_NAMES) {
   try {
@@ -35,7 +36,7 @@ async function createNewConfig(chainName: CHAIN_NAMES) {
 
     newSNOWConfig(solVerifier, iconVerifier)
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
 }
 
@@ -73,11 +74,11 @@ async function getVerifierParameters(chainName: CHAIN_NAMES): Promise<{
       iconVerifier,
     }
   } catch (e) {
-    console.log('error in updatesolConfig', e)
+    console.error('error in updatesolConfig', e)
   }
 }
 
-async function getIconVerifier(
+export async function getIconVerifier(
   sol_rx_seq: BigNumber,
   icon_tx_seq: BigNumber,
   sol_rx_height: BigNumber,
@@ -105,11 +106,11 @@ async function getIconVerifier(
       validatorHash,
     }
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
 }
 
-async function getSolidityVerifier(
+export async function getSolidityVerifier(
   icon_rx_seq: BigNumber,
   sol_tx_seq: BigNumber,
   icon_rx_height: BigNumber,
@@ -145,7 +146,7 @@ async function getSolidityVerifier(
       parentHash,
     }
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
 }
 
@@ -167,7 +168,7 @@ async function newBSCConfig(bscVerifier: IVerifierSolidity, iconVerifier: IVerif
 
     console.log('Config File is successfully created  please find name ' + DUMP_BSC_CONFIG_NAME)
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
 }
 
@@ -188,7 +189,7 @@ async function newSNOWConfig(snowVerifier: IVerifierSolidity, iconVerifier: IVer
 
     console.log('Config File is successfully created  please find name' + DUMP_SNOW_CONFIG_NAME)
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
 }
 

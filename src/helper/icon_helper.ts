@@ -12,14 +12,13 @@ import EventFilter from '../icon-monitor/EventFilter.js'
 import EventNotification from '../icon-monitor/EventNotification.js'
 
 const IconServiceDefault = IconService.default
-const { HttpProvider, IconBuilder } = IconServiceDefault
 
-const provider = new HttpProvider(ICON_URL)
+const provider = new IconServiceDefault.HttpProvider(ICON_URL)
 const iconService = new IconServiceDefault(provider)
 
 export const getStatusIcon = async (_link: string): Promise<IStatus> => {
   try {
-    const callBuilder = new IconBuilder.CallBuilder()
+    const callBuilder = new IconServiceDefault.IconBuilder.CallBuilder()
     const call = callBuilder
       .method('getStatus')
       .to(ICON_CHAIN_BMC_CONTRACT)
@@ -35,8 +34,8 @@ export const getStatusIcon = async (_link: string): Promise<IStatus> => {
       rxHeight: BigNumber.from(op.rx_height),
       currentHeight: BigNumber.from(op.cur_height),
     }
-  } catch (err) {
-    console.log(err)
+  } catch (e) {
+    console.error(e)
   }
 }
 
@@ -52,11 +51,15 @@ export function getHeightForNthSeqInIcon(
         BigNumber.from(height_to_start),
         new EventFilter(MESSAGE_SIGNATURE, ICON_CHAIN_BMC_CONTRACT, [dstLinkAddr], []),
       )
+
       const onEvent = async (data: EventNotification) => {
         const op = await getSequenceNumberFromEventNotification(data)
         if (op.eq(seq_number)) {
           m.close()
           // because of monitor block subtract 1 from height
+          console.log('********Sequence Number matched at ********')
+          console.log({ required_seqence_number: seq_number.toNumber(), height: data.height.sub(1).toNumber() })
+
           resolve(data.height.sub(1))
         }
       }
@@ -81,14 +84,21 @@ async function getSequenceNumberFromEventNotification(data: EventNotification): 
     const confirmTx = block.confirmedTransactionList[data.index.toNumber()]
 
     const txresult = await iconService.getTransactionResult(confirmTx.txHash).execute()
-    console.log({ hash: txresult.txHash })
 
     const eventLog = txresult.eventLogs[BigNumber.from(data.events[0]).toNumber()] as IIconEventLog
 
     const seqNumber = eventLog.indexed[2]
+    // subtract 1 is required because of monitor loop
+    // console.log({
+    //   eventNotification: data,
+    //   Txhash: txresult.txHash,
+    //   seqNumber: BigNumber.from(seqNumber).toNumber(),
+    //   height: data.height.sub(1).toNumber(),
+    // })
+
     return BigNumber.from(seqNumber)
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
 }
 
@@ -118,7 +128,7 @@ export async function getValidatorHashByHeightIcon(height: number): Promise<stri
 
     return header[6]
   } catch (e) {
-    console.log('error', e)
+    console.error('error', e)
   }
 }
 
@@ -126,6 +136,6 @@ export function decodeRLP(rawData: string): any {
   try {
     return RLP.decode(base64.decode(rawData))
   } catch (e) {
-    console.log('error while decoding: ', e)
+    console.error('error while decoding: ', e)
   }
 }

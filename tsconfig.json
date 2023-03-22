@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
     "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "moduleResolution": "nodenext",
     "target": "ES2015",
     "sourceMap": true,
     "outDir": "dist",
     "resolveJsonModule": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "types": ["jest"]
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "tests/*"]
 }
+  

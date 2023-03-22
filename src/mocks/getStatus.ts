@@ -14,8 +14,8 @@ export const mockStatusBSC: IStatus[] = [
   {
     rxSeq: BigNumber.from('0x0297'),
     txSeq: BigNumber.from('0x0216'),
-    rxHeight: BigNumber.from('0x01955384'),
-    currentHeight: BigNumber.from('0x01931096'),
+    rxHeight: BigNumber.from('0x03c1d7cf'),
+    currentHeight: BigNumber.from('0x01955384'),
   },
 ]
 
